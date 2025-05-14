@@ -1,25 +1,46 @@
 //-
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using MvcStartApp.Models;
+using MvcStartApp.Models.Db;
 
 
 namespace MvcStartApp.Controllers;
 
 public class HomeController : Controller
 {
+    // ссылка на репозиторий
+    private readonly IBlogRepository _repo;
+
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IBlogRepository repo)
     {
         _logger = logger;
+        _repo = repo;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        // Добавим создание нового пользователя
+        var newUser = new User()
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Andrey",
+            LastName = "Petrov",
+            JoinDate = DateTime.Now
+        };
+
+        // Добавим в базу
+        await _repo.AddUser(newUser);
+        
+        // Выведем результат
+        Console.WriteLine($"User with id {newUser.Id}, named {newUser.FirstName} was successfully added on {newUser.JoinDate}");
+
         return View();
     }
 

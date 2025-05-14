@@ -14,6 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Microsoft.EntityFrameworkCore;
+
+using MvcStartApp.Models;
+using MvcStartApp.Middlewares;
+using MvcStartApp.Tools;
+
 
 namespace MvcStartApp;
 
@@ -22,6 +28,18 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        // получаем строку подключения из файла конфигурации
+        // string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        string connection = ConnectionTools.GetConnectionString();
+
+        // добавляем контекст ApplicationContext в качестве сервиса в приложение
+        // builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
+        builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
+
+        // регистрация сервиса репозитория для взаимодействия с базой данных
+        // builder.Services.AddSingleton<IBlogRepository, BlogRepository>();
+        builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -34,6 +52,9 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
         }
         app.UseRouting();
+
+        // Подключаем логирвоание с использованием ПО промежуточного слоя
+        app.UseMiddleware<LoggingMiddleware>();
 
         app.UseAuthorization();
 
