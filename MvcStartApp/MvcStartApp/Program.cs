@@ -30,8 +30,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // получаем строку подключения из файла конфигурации
-        // string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-        string connection = ConnectionTools.GetConnectionString();
+        string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+        // обновляем публичные значения реальными значениями из приватной области
+        connection = ConnectionTools.GetConnectionString(connection);
 
         // добавляем контекст ApplicationContext в качестве сервиса в приложение
         // builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
