@@ -1,6 +1,7 @@
 //-
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,7 +30,7 @@ public class LoggingMiddleware
     /// <summary>
     ///  Необходимо реализовать метод Invoke  или InvokeAsync
     /// </summary>
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, BlogContext dbContext)
     {
         /*
         // действия, если репозиторий подключен к данному модулю (middleware) напрямую минуя контроллер
@@ -59,7 +60,7 @@ public class LoggingMiddleware
             Url = $"http://{(context.Request.Host.Value ?? string.Empty) + context.Request.Path}",
         };
 
-        BlogContext dbContext = context.RequestServices.GetRequiredService<BlogContext>();
+        // создаем объект репозитория
         IRequestLogRepository logRepo = new RequestLogRepository(dbContext);
 
         // записываем данные в базу с помощью репозитория
