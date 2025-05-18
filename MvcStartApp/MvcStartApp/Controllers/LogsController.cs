@@ -9,11 +9,11 @@ using MvcStartApp.Models;
 
 namespace MvcStartApp.Controllers;
 
-public class RequestController : Controller
+public class LogsController : Controller
 {
     private readonly IRequestLogRepository _repo;
     
-    public RequestController(IRequestLogRepository repo)
+    public LogsController(IRequestLogRepository repo)
     {
         _repo = repo;
     }

@@ -36,11 +36,15 @@ public class Program
 
         // добавляем контекст ApplicationContext в качестве сервиса в приложение
         // builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
-        builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
 
         // регистрация сервиса репозитория для взаимодействия с базой данных
         // builder.Services.AddSingleton<IBlogRepository, BlogRepository>();
+        // builder.Services.AddSingleton<IRequestLogRepository, RequestLogRepository>();
+
+        builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
+
         builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+        builder.Services.AddScoped<IRequestLogRepository, RequestLogRepository>();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
